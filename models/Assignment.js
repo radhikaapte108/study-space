@@ -2,6 +2,11 @@ const mongoose = require('mongoose');
 
 const assignmentSchema = new mongoose.Schema(
   {
+    owner: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+      required: [true, 'Assignment owner is required.']
+    },
     subject: {
       type: String,
       required: [true, 'Subject is required.'],
@@ -16,7 +21,7 @@ const assignmentSchema = new mongoose.Schema(
     },
     description: {
       type: String,
-      required: [true, 'Description is required.'],
+      default: '',
       trim: true,
       maxlength: [1000, 'Description cannot be longer than 1000 characters.']
     },
@@ -39,5 +44,7 @@ const assignmentSchema = new mongoose.Schema(
   },
   { timestamps: true }
 );
+
+assignmentSchema.index({ owner: 1, deadline: 1, createdAt: -1 });
 
 module.exports = mongoose.model('Assignment', assignmentSchema);
